@@ -4,7 +4,7 @@ sa-deployment:
 
     permissions:
       image:
-        name: quay.io/superawesomeltd/permissions
+        name: superawesomeltd/permissions
         tag: 1.0.2
       env: {}
       ports:
