@@ -75,7 +75,7 @@
     "accesscontrol": "^2.2.1",
     "accesscontrol-re": "^3.1.0",
     "json-diff": "^0.5.4",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.20"
   },
   "devDependencies": {
     "@compodoc/compodoc": "1.1.10",
