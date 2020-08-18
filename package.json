@@ -1,6 +1,6 @@
 {
   "name": "@superawesome/permissions",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Fine grained permissions / access control with ownerships & attribute picking, done right.",
   "keywords": [
     "permission",
@@ -75,7 +75,7 @@
     "accesscontrol": "^2.2.1",
     "accesscontrol-re": "^3.1.0",
     "json-diff": "^0.5.4",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.20"
   },
   "devDependencies": {
     "@compodoc/compodoc": "1.1.10",
@@ -113,7 +113,7 @@
     "ts-node": "^8.10.2",
     "tsutils": "~3.17.1",
     "type-fest": "^0.15.0",
-    "typescript": "^3.9.3",
+    "typescript": "^3.9.7",
     "upath": "^1.2.0"
   },
   "engines": {

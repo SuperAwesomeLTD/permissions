@@ -5,7 +5,6 @@
 /nodemon*.json
 .editorconfig
 .gitignore
-.prettierrc
 .idea/
 jest.config.js
 /docker
@@ -14,9 +13,6 @@ jest.config.js
 /.dockerignore
 /docker-compose.yml
 /Dockerfile
-/dist/docs/
-/dist/__tests__/
-/src
 /.*
 /tsconfig.docs.json
 /additional-documentation/
