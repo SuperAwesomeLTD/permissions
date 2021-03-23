@@ -36,8 +36,8 @@ import { getLogger } from './logger';
  The options passed at the `Permissions` constructor
  */
 export interface IPermissionsOptions<
-  TUserId extends Tid = number,
-  TResourceId extends Tid = number
+  TUserId extends Tid,
+  TResourceId extends Tid
 > {
   permissionDefinitions?:
     | PermissionDefinition<TUserId, TResourceId>
@@ -51,8 +51,8 @@ export interface IPermissionsOptions<
 /**
  The main class - see [Basic Usage](/additional-documentation/basic-usage.html)
 */
-export class Permissions<TUserId extends Tid = number, TResourceId extends Tid = number> {
-  private _permissionDefinitionsInternal: PermissionDefinitionInternal[] = [];
+export class Permissions<TUserId extends Tid, TResourceId extends Tid> {
+  private _permissionDefinitionsInternal: PermissionDefinitionInternal<Tid, Tid>[] = [];
 
   private _accessControl: AccessControl;
 
@@ -211,7 +211,7 @@ export class Permissions<TUserId extends Tid = number, TResourceId extends Tid =
    @return Promise<Permit> a Promise of a [Permit](/classes/Permit.html) instance.
    */
   public async grantPermit({
-    // <TUserId extends Tid = number, TResourceId extends Tid = number>
+    // <TUserId extends Tid, TResourceId extends Tid>
     user,
     action,
     resource,
@@ -405,7 +405,7 @@ export class Permissions<TUserId extends Tid = number, TResourceId extends Tid =
       [key: string]: any;
     },
     consolidateFlag: boolean | 'force' = false
-  ): Partial<PermissionDefinitionInternal>[] {
+  ): Partial<PermissionDefinitionInternal<Tid, Tid>>[] {
     const filteredPDs = _f.flow(
       _f.filter(filter),
       _f.reject((opd) => _.isEmpty(opd.grant))
@@ -467,7 +467,7 @@ export class Permissions<TUserId extends Tid = number, TResourceId extends Tid =
    * @param strict true means we dont care if redefining action is _.equal. Duplicating is bad enough!
    */
   private filterPDsWithDuplicateGrantActions = (
-    pdi: PermissionDefinitionInternal,
+    pdi: PermissionDefinitionInternal<Tid, Tid>,
     strict = false
   ) =>
     _.filter(

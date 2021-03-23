@@ -22,7 +22,7 @@ All the information, helpers & further querying you might require for your curre
 
 __Note__: `Permit` constructor is private, you shouldn't instantiate one your self, just call `grantPermit()`.
 */
-export class Permit<TUserId extends Tid = number, TResourceId extends Tid = number> {
+export class Permit<TUserId extends Tid, TResourceId extends Tid> {
   private constructor(
     /**
      The same [`IUser`](/interfaces/IUser.html) object passed in `grantPermit()`

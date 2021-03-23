@@ -11,11 +11,11 @@ import { getLogger } from './logger';
 
 export const stringify = (obj) => JSON.stringify(obj, null, 2);
 
-export const hasSomeOwnGrant = (ipd: PermissionDefinitionInternal) =>
+export const hasSomeOwnGrant = (ipd: PermissionDefinitionInternal<Tid, Tid>) =>
   _.some(ipd.grant, (attrs, action): any => _.endsWith(action, `:${EPossession.own}`));
 
 export const projectPDWithDefaultsToInternal = _.curry(
-  <TUserId extends Tid = number, TResourceId extends Tid = number>(
+  <TUserId extends Tid, TResourceId extends Tid>(
     defaults: PermissionDefinitionDefaults,
     pd: PermissionDefinition<TUserId, TResourceId>
   ): PermissionDefinitionInternal<TUserId, TResourceId> => {
@@ -75,7 +75,7 @@ export const projectPDWithDefaultsToInternal = _.curry(
 );
 
 export const buildAccessControl = (
-  permissionDefinitions: PermissionDefinitionInternal[]
+  permissionDefinitions: PermissionDefinitionInternal<Tid, Tid>[]
 ): [AccessControl, AccessControlRe] => {
   if (_.isEmpty(permissionDefinitions))
     throw new Error('SA-Permissions: cant build with empty permissionDefinitions!');

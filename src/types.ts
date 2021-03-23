@@ -1,7 +1,10 @@
 /**
  * An Id in your system, can be either `number` or `string` (eg a UUID).
  */
-export type Tid = number | string;
+ type TnumberOrString = number | string;
+ export type Tid = TnumberOrString extends number ? number : string;
+
+ export type TJson = string | number | boolean | null | TJson[] |{ [key: string]: TJson };
 
 /**
   All the info we need to know about a User, for example:
@@ -18,10 +21,10 @@ export type Tid = number | string;
 
   If you're on vanilla JavaScript worry not: just use number or string for id and you're fine.
 */
-export interface IUser<TUserId extends Tid = number> {
+export interface IUser<TUserId extends Tid> {
   id: TUserId;
   roles: string[];
-  [key: string]: any;
+  [key: string]: TJson;
 }
 
 /**
@@ -40,7 +43,7 @@ export const isValidIUser = <TUserId extends Tid>(user: IUser<TUserId>) =>
  */
 export interface IResourceItemWithId<TResourceId extends Tid> {
   id: TResourceId;
-  [key: string]: any;
+  [key: string]: TJson;
 }
 
 /**
@@ -48,7 +51,7 @@ export interface IResourceItemWithId<TResourceId extends Tid> {
  */
 export interface IResourceItemWithOptionalId<TResourceId extends Tid> {
   id?: TResourceId;
-  [key: string]: any;
+  [key: string]: TJson;
 }
 
 /**
@@ -61,7 +64,7 @@ export interface IResourceItemWithOptionalId<TResourceId extends Tid> {
    async (user) => documentService.findWhere({ createdBy: user.id })
  ```
  */
-export type TlistOwned<TUserId extends Tid = number, TResourceId extends Tid = number> = (
+export type TlistOwned<TUserId extends Tid, TResourceId extends Tid> = (
   user: IUser<TUserId>
 ) => Promise<TResourceId[]>;
 
@@ -84,7 +87,7 @@ export type IContext<Tctx = any> = Tctx;
 
  In a collection (eg array) filtering example, it might be just a bunch of filter functions that you accumulate in an array (i.e the `context`) and then somehow compose (eg with _.overSome).
  */
-export type TlimitOwned<TUserId extends Tid = number, Tctx = any> = ({
+export type TlimitOwned<TUserId extends Tid, Tctx = any> = ({
   user,
   context,
 }: {
@@ -97,7 +100,7 @@ export type TlimitOwned<TUserId extends Tid = number, Tctx = any> = ({
 
  See [Example 6](/additional-documentation/detailed-usage-&-examples.html) for how it is used in practice.
  */
-export type TlimitOwnReduce<TUserId extends Tid = number, Tctx = any> = ({
+export type TlimitOwnReduce<TUserId extends Tid, Tctx = any> = ({
   user,
   limitOwneds,
   context,
@@ -116,7 +119,7 @@ export type TlimitOwnReduce<TUserId extends Tid = number, Tctx = any> = ({
    async ({user, resourceId}) => (await documentService.findById(resourceId).createdBby === user.id;
  ```
 */
-export type TisOwner<TUserId extends Tid = number, TResourceId extends Tid = number> = ({
+export type TisOwner<TUserId extends Tid, TResourceId extends Tid> = ({
   user,
   resourceId,
 }: {
@@ -185,7 +188,7 @@ export enum EPossession {
 
  See [Basic Usage](/additional-documentation/basic-usage.html)
  */
-export class GrantPermitQuery<TUserId extends Tid = number, TResourceId extends Tid = number> {
+export class GrantPermitQuery<TUserId extends Tid, TResourceId extends Tid> {
   /**
    A user object with at least `{id, roles}`
    */

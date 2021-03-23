@@ -7,11 +7,12 @@ import { AccessControl } from 'accesscontrol';
 import { buildAccessControl, hasSomeOwnGrant, isArraySetEqual, isLike } from './utils';
 import { PermissionDefinitionInternal } from './PermissionDefinitions';
 import { getLogger } from './logger';
+import { Tid } from './types';
 
 export const mergeTwoPermissions = (
-  receivingPD: PermissionDefinitionInternal,
-  pd: PermissionDefinitionInternal
-): PermissionDefinitionInternal => {
+  receivingPD: PermissionDefinitionInternal<Tid, Tid>,
+  pd: PermissionDefinitionInternal<Tid, Tid>
+): PermissionDefinitionInternal<Tid, Tid> => {
   // @todo: throw if !canPermissionsBeMerged
   const result = {
     ...receivingPD,
@@ -26,17 +27,17 @@ export const mergeTwoPermissions = (
 };
 
 export const areCompatibleOwnHooks = (
-  pd1: PermissionDefinitionInternal,
-  pd2: PermissionDefinitionInternal
+  pd1: PermissionDefinitionInternal<Tid, Tid>,
+  pd2: PermissionDefinitionInternal<Tid, Tid>
 ) =>
   (pd1.isOwner === pd2.isOwner || !pd1.isOwner || !pd2.isOwner) &&
   (pd1.listOwned === pd2.listOwned || !pd1.listOwned || !pd2.listOwned);
 
 export const consolidatePermissions = _f.reduce(
-  (consolidatedCPDs: PermissionDefinitionInternal[], cpd: PermissionDefinitionInternal) => {
+  (consolidatedCPDs: PermissionDefinitionInternal<Tid, Tid>[], cpd: PermissionDefinitionInternal<Tid, Tid>) => {
     const matchingPds = _.filter(
       consolidatedCPDs,
-      (consolidatedCpd: PermissionDefinitionInternal) =>
+      (consolidatedCpd: PermissionDefinitionInternal<Tid, Tid>) =>
         isArraySetEqual(consolidatedCpd.roles, cpd.roles, _.isEqual) &&
         consolidatedCpd.resource === cpd.resource &&
         areCompatibleOwnHooks(consolidatedCpd, cpd)
@@ -59,7 +60,7 @@ export const consolidatePermissions = _f.reduce(
 
 export const deleteDefinedGrants = _f.reduce(
   // refactor, not needs to be reducer, just a visitor to delete grant  props
-  (consolidatedCPDs: PermissionDefinitionInternal[], cpd: PermissionDefinitionInternal) => {
+  (consolidatedCPDs: PermissionDefinitionInternal<Tid, Tid>[], cpd: PermissionDefinitionInternal<Tid, Tid>) => {
     const [accessControl] = _.isEmpty(consolidatedCPDs)
       ? [new AccessControl()] // dummy
       : buildAccessControl(consolidatedCPDs);
@@ -90,7 +91,7 @@ export const deleteDefinedGrants = _f.reduce(
   }
 );
 
-export const mergeCompatibleGrants = (pds: PermissionDefinitionInternal[]) => {
+export const mergeCompatibleGrants = (pds: PermissionDefinitionInternal<Tid, Tid>[]) => {
   // for every parent PD, find ones below it that have the a super set with the same exact grants
   for (let parentIdx = 0; parentIdx < pds.length; parentIdx++) {
     const parentPd = pds[parentIdx];
@@ -111,7 +112,7 @@ export const mergeCompatibleGrants = (pds: PermissionDefinitionInternal[]) => {
 export const consolidatePermissionDefinitions = (filter, consolidateFlag: boolean | 'force') =>
   _f.flow(
     _f.filter(filter),
-    _f.tap((ipds: PermissionDefinitionInternal[]) => {
+    _f.tap((ipds: PermissionDefinitionInternal<Tid, Tid>[]) => {
       if (_.some(ipds, hasSomeOwnGrant)) {
         const msg = `getDefinitions() with consolidate = true PermissionDefinitions is **experimental** and NOT compatible when Possession.own is used ('force' is needed)!
         Use "getDefinitions()" with consolidate = false to avoid consolidations.`;
@@ -135,5 +136,5 @@ export const consolidatePermissionDefinitions = (filter, consolidateFlag: boolea
       )
     ),
     // eliminate PDs with empty grants
-    _f.reject((pd: PermissionDefinitionInternal) => _.isEmpty(pd.grant))
+    _f.reject((pd: PermissionDefinitionInternal<Tid, Tid>) => _.isEmpty(pd.grant))
   );

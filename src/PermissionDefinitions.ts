@@ -57,7 +57,7 @@ import {
 
  */
 // eslint-disable-next-line @typescript-eslint/class-name-casing
-class PermissionDefinition_DOCS<TUserId extends Tid = number, TResourceId extends Tid = number> {
+class PermissionDefinition_DOCS<TUserId extends Tid, TResourceId extends Tid> {
   /** Base PermissionDefinition, i.e without out Ownership hooks - stored in PermissionDefinitionNoOwnershipInternal - PLEASE KEEP IN SYNC
 
   /**
@@ -204,8 +204,8 @@ class PermissionDefinition_DOCS<TUserId extends Tid = number, TResourceId extend
  Implements the ownership hooks rules.
  */
 export type PermissionDefinition<
-  TUserId extends Tid = number,
-  TResourceId extends Tid = number
+  TUserId extends Tid,
+  TResourceId extends Tid
 > = MergeExclusive<
   PermissionDefinitionNoOwnershipInternal,
   RequireExactlyOne<
@@ -271,8 +271,8 @@ export class PermissionDefinitionDefaults {
 }
 
 export interface ICompletePermissionDefinitions<
-  TUserId extends Tid = number,
-  TResourceId extends Tid = number
+  TUserId extends Tid,
+  TResourceId extends Tid
 > {
   defaults?: PermissionDefinitionDefaults;
   definitions: PermissionDefinition<TUserId, TResourceId>[];
@@ -286,8 +286,8 @@ export interface ICompletePermissionDefinitions<
  A `PermissionDefinitionInternal` is **strict** and **self complete**, i.e it has settled/inherited the defaults and thus nas no missing props.
  */
 export class PermissionDefinitionInternal<
-  TUserId extends Tid = number,
-  TResourceId extends Tid = number
+  TUserId extends Tid,
+  TResourceId extends Tid
 > {
   // @todo: define with typescript's Pick & modifiers or equivalent
   roles: string[];
