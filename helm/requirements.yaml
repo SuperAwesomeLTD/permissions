@@ -1,4 +1,0 @@
-dependencies:
-- name: sa-deployment
-  version: 0.10.0
-  repository: '@superawesome'
